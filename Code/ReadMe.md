@@ -14,3 +14,4 @@ After constructing call graph for each app, DescribeCTX also establish a mapping
 ## Permission Description
 Use following command to extract permission descriptions from apps' privacy policies:  
 `  python3 extract_pp.py`
+# Training and Prediction
