@@ -11,7 +11,7 @@ def create_subgraph(G, node):
 	return G.subgraph(nodes) 
 # your app and call graph (.dot files) folder
 apps = os.listdir('./Descriptions/Contacts/')
-dot_dir = './sampletest/dot_output/1/'
+dot_dir = './APKCallGraph/dot_output/'
 dot_files = os.listdir(dot_dir)
 for app in apps:
 	if (app == '.DS_Store'):
@@ -34,7 +34,7 @@ for app in apps:
 				m_name = line[line.index('"') + 1:line.rindex('"')]
 				m2id[m_name] = m_id
 				id2m[m_id] = m_name
-				if '<android.provider.ContactsContract' in m_name:
+				if 'enter sensitive API here' in m_name:
 					targets.append(m_name)
 			temp.close()
 			G = nx.drawing.nx_pydot.read_dot(dot_dir + app[:app.index('.txt')] + '/' + app[:app.index('.txt')] + '.dot')
@@ -56,5 +56,5 @@ for app in apps:
 			# f.close()
 			f2.close()
 		except Exception as e:
-			f = open('/Users/shaoyang/Downloads/7permissions/newdata/1/cg/Contacts/' + app, 'w')
+			f = open('./cg/Contacts/' + app, 'w')
 			continue
