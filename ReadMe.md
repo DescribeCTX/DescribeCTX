@@ -18,5 +18,3 @@ During the prediction phase, given an app's GUI context and sensitive API call g
 
 ## Feature Extraction
 Before extracting features from apps, APKTool is required to decompile each .apk file and obtain the apk resources. For more detailed instruction, please go to https://github.com/DescribeCTX/DescribeCTX/tree/main/Code.
-## Training and Prediction
-Run model.py. The model takes triples (<permission description, PACG, GUI context>) as input data. The dataset has been splitted, after the training session is done, the program shows the synthesized description for testing samples.
