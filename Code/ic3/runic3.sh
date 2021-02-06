@@ -1,7 +1,7 @@
 #! /bin/sh
 
 appDir=$1
-forceAndroidJar=/Users/shaoyang/Library/Android/sdk/platforms/android-18/android.jar
+forceAndroidJar=./android-18/android.jar
 
 var=1
 for appPath in `ls $appDir/*.apk`
@@ -9,8 +9,8 @@ do
 appName=`basename $appPath .apk`
 retargetedPath=testspace/$appName.apk
 
-mysql -uroot -pjiaozhuys05311 -e 'drop database if exists cc; create database cc'
-mysql -uroot -pjiaozhuys05311 cc < schema
+mysql -uroot -p<password> -e 'drop database if exists cc; create database cc'
+mysql -uroot -p<password> cc < schema
 
 mkdir output/$appName
 
