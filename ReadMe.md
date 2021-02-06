@@ -16,5 +16,5 @@ During the prediction phase, given an app's GUI context and sensitive API call g
 * Other dependencies: numpy, scikit-learn, networkx, pandas
 * APKTool: Check https://ibotpeaches.github.io/Apktool/ for more details and download.
 
-## Feature Extraction
-Before extracting features from apps, APKTool is required to decompile each .apk file and obtain the apk resources. For more detailed instruction, please go to https://github.com/DescribeCTX/DescribeCTX/tree/main/Code.
+## Usage
+Before extracting features from apps, APKTool is required to decompile each .apk file and obtain the apk resources. For more detailed instruction on feature extraction and how to train and predict, please go to https://github.com/DescribeCTX/DescribeCTX/tree/main/Code.
