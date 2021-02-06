@@ -15,3 +15,10 @@ After constructing call graph for each app, DescribeCTX also establish a mapping
 Use following command to extract permission descriptions from apps' privacy policies:  
 `  python3 extract_pp.py`
 # Training and Prediction
+## Input
+The input of the model is triples extracted from each app (<permission description, GUI context, PACG>)
+## Output
+The synthesized descriptions
+## Training and Prediction
+Use the following command to train the model, and display synthesized description for the test apps:  
+`  python3 model.py`
