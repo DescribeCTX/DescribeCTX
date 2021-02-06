@@ -13,4 +13,4 @@ After constructing call graph for each app, DescribeCTX also establish a mapping
 `  python3 get_GUI_text.py`
 ## Permission Description
 Use following command to extract permission descriptions from apps' privacy policies:  
-`  python3 extract_nlp.py`
+`  python3 extract_pp.py`
