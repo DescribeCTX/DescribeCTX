@@ -214,6 +214,6 @@ def seq2text(input_seq):
 
 for i in range(len(x_pp_val)):
 	print("Review:",seq2text(x_pp_val[i]))
-	print("Original summary:",seq2summary(y_val[i]))
-	print("Predicted summary:",decode_sequence(x_pp_val[i].reshape(1,max_len_pp), x_ui_val[i].reshape(1,max_len_ui), x_cg_val[i].reshape(1,max_len_cg)))
+	print("Reference Sentence:",seq2summary(y_val[i]))
+	print("Synthesized Description:",decode_sequence(x_pp_val[i].reshape(1,max_len_pp), x_ui_val[i].reshape(1,max_len_ui), x_cg_val[i].reshape(1,max_len_cg)))
 	print('\n')
