@@ -16,7 +16,7 @@ Use following command to extract permission descriptions from apps' privacy poli
 `  python3 extract_pp.py`
 # Training and Prediction
 ## Input
-The input of the model is triples extracted from each app (<permission description, GUI context, PACG>)
+The input of the model is triples extracted from each app (i.e. <permission description, GUI context, PACG>).
 ## Output
 Reference Sentence + Synthesized Description.  
 ***Example***:  
