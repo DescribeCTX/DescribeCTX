@@ -1,0 +1,560 @@
+
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <script type="text/javascript" src="https://s3.amazonaws.com/mturk-public/externalHIT_v1.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript">
+    last_time = 0
+
+    now_div = 0;
+    newly_div = 0;
+    max_div = 31;
+    function check_n_submit(){
+      var allsel = $(":checked");
+      var obj={};
+
+      for (var i=0; i<allsel.length; i++){
+        lasti = allsel[i].name.lastIndexOf('_');
+        key = allsel[i].name.substr(0,lasti+1);
+        if (!obj[key]){
+          obj[key] = 1;
+        }
+        else{
+          obj[key] ++;
+        }
+
+      }
+
+      flag = Object.keys(obj).length;
+      //alert(flag);
+      if(flag==max_div){
+        $("#submitButton").click()
+      }
+      else{
+        if (flag < max_div-1){
+          $("#alert").html("There are "+String(max_div-flag)+" missing questions.");
+        }
+        else{
+          $("#alert").html("There is 1 missing question.");
+        }
+      }
+    }
+
+    
+
+    $(document).ready(function(){
+      max_div = parseInt($("#maxdiv").text());
+      //alert(max_div);
+      last_time = Date.parse(new Date())/1000;
+
+      $(".check").each(function(){
+        $(this).click(function(event){
+          ch = $(this).find('input')[0];
+          name = ch.name;
+          //alert(name);
+          if(ch.checked){
+            $(":checkbox[name="+name+"]").click();
+            //$(":checkbox[name="+name+"]").prop("checked",false);
+          }
+          else{
+            $(":checkbox[name="+name+"]").click();
+            //$(":checkbox[name="+name+"]").prop("checked",true);
+          }
+          //event.stopPropagation();
+        });
+      });
+
+      /*
+      $(":checkbox").each(function(){
+        $(this).change(function(){
+          if ($(this).is(":checked")){
+            pos = this.name.lastIndexOf('_')
+            b_name = this.name.substr(0,pos+1);
+            //alert(b_name);
+            for (var i = 0; i < 3; i++) {
+              a_name = b_name+String(i);
+              if (a_name != this.name){
+                //$("#alert").html(a_name);
+                $(":checkbox[name="+a_name+"]").prop("checked",false);
+              }
+            }
+          }
+          
+        });
+      });*/
+
+      $(".next").each(function(){
+        $(this).click(function(){
+          //$("#alert").html(now_div)
+          curr_time = Date.parse(new Date())/1000;
+          if (curr_time-last_time<15 && newly_div==now_div){
+            $("#alert").html("Please read at least 15 seconds.");
+          }
+          else{
+            if (now_div>=max_div-1) {
+              now_div=max_div-1;
+            }
+            else {
+              $("#alert").html("");
+              last_time=curr_time;
+              name = 'div_'+String(now_div);
+              $(".questions[name="+name+"]").hide();
+              now_div++;
+              name = 'div_'+String(now_div);
+              $(".questions[name="+name+"]").show();
+
+              if (newly_div<now_div){
+                newly_div=now_div;
+              }
+            }
+          }
+        });
+      });
+
+      $(".pre").each(function(){
+        $(this).click(function(){
+          //$("#alert").html(now_div)
+          if (now_div<=0) {
+            now_div=0;
+          }
+          else {
+            $("#alert").html("");
+            last_time=curr_time;
+            name = 'div_'+String(now_div);
+            $(".questions[name="+name+"]").hide();
+            now_div--;
+            name = 'div_'+String(now_div);
+            $(".questions[name="+name+"]").show();
+          }
+        });
+      });
+    });
+  </script>
+  <style type="text/css">
+    div .questions{
+      margin: 10px;
+
+    }
+
+
+    div .pre,.next{
+      margin: 5px;
+      padding-top:5px;
+      background-color: #999;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      vertical-align: center;
+      border-radius: 5px;
+      float:left;
+      font-size: 18px;
+    }
+
+    div .pre,.next:hover{
+      cursor: pointer;
+    }
+
+    div .count{
+      margin: 5px;
+      padding-top: 5px
+      width: 50px;
+      font-size: 18px;
+      float:left;
+    }
+
+    button .butt{
+      border-radius: 5px;
+      height: 40px;
+      width: 100px;
+      color: #f68;
+    }
+
+    .ori{
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .perm{
+      font-size:24px;
+    }
+
+    .check{
+      font-size: 24px;
+      margin:10px;
+      padding:10px;
+      border-radius: 10px;
+    }
+
+    .check:hover{
+      background-color: yellow;
+      cursor:pointer;
+    }
+
+    .butt{
+      margin: 5px;
+      padding-top:5px;
+      background-color: #099;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      vertical-align: center;
+      border-radius: 5px;
+      float:left;
+      font-size: 18px;
+    }
+    .butt:hover{
+      cursor: pointer;
+    }
+
+  </style>
+ </head>
+ <body>
+  <form name="mturk_form" method="post" id="mturk_form" action="https://www.mturk.com/mturk/externalSubmit">
+  <input type="hidden" value="" name="assignmentId" id="assignmentId"/>
+  <h1>Survey: Sementic Evaluation on Software Security Descriptions</h1>
+  <h3>In this survey, you are being asked to evaluate the output of a software security analysis tool. The purpose of this research is to evaluate whether the output from our developed software security analysis tool can assist end users in understanding security risks of the software in use.</h3>
+  <h3><i>Procesure:</i> You will be shown with a reference sentence copied from app descriptions of Android apps, and three synthesized sentences generated by our developed tool and two existing techniques. We have randomly shuffled the order of the three generated sentences. You will be asked to evaluate the three generated sentences in terms of sementic closeness to the reference sentence, and select the most closed one among the three senetences.</h3>
+  <h3>For the following example, suppose you think description <b style="font-size: 24;color:red;">C</b> is the most closed to the reference sentence, and you may click the checkbox at the font of <b style="font-size: 24;color:red;">C</b>. Sometimes you may think there are more than one best description, you may select two or three, such as you can select <b style="font-size: 24;color:red;">B</b> and <b style="font-size: 24;color:red;">C</b> for the following example. <span style="background-color: red;color:yellow;">If all three sentences are the same, please select all of them.</span></h3>
+  <H4>Example:</p>
+  <p><i>Permission:</i>CAMERA</p>
+  <p><i>Reference:</i>Take your new image with camera.</p>
+  <p>□ A: scan the camera</p>
+  <p>√ B: take picture with camera</p>
+  <p>√ C: take photo with camera</p>
+  <hr>
+
+  <h2 style="color:red;background-color: yellow;padding:10px;text-align: center;">Select the most closed description(s) in terms of sementic closeness to the reference sentence</h2>
+  
+
+<p id="maxdiv" hidden>32</p><div class="questions" name="div_0" >
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Download love calculator; put your love to a test and see if he is elected and save the result as image to the gallery.</p>
+                    <p class="check"><input type="checkbox" name="check_-1_0"/>A: save pictures to your storage</p>
+                    <p class="check"><input type="checkbox" name="check_-1_1"/>B: save photo to your phone gallery</p>
+                    <p class="check"><input type="checkbox" name="check_-1_2"/>C: save pictures to your storage</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">1/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_1" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Get these free music ringtones for Android ringing and free download awesome ringtones that will rock your body!</p>
+                    <p class="check"><input type="checkbox" name="check_0_0"/>A: you can download ringtones and free ringtones for your android device</p>
+                    <p class="check"><input type="checkbox" name="check_0_1"/>B: save the download to your phone</p>
+                    <p class="check"><input type="checkbox" name="check_0_2"/>C: download ringtones for your device</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">2/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_2" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> You can use your current location or any other place as starting point for distance calculation</p>
+                    <p class="check"><input type="checkbox" name="check_1_0"/>A: the app use gps and your current location gps</p>
+                    <p class="check"><input type="checkbox" name="check_1_1"/>B: find your current location and share it</p>
+                    <p class="check"><input type="checkbox" name="check_1_2"/>C: the app uses your location and gps</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">3/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_3" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Save album to SD card</p>
+                    <p class="check"><input type="checkbox" name="check_2_0"/>A: save the pictures to your phone storage or sd card</p>
+                    <p class="check"><input type="checkbox" name="check_2_1"/>B: download your favorite images to sd card</p>
+                    <p class="check"><input type="checkbox" name="check_2_2"/>C: download your favorite images to sd card</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">4/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_4" hidden>
+                    <p class="perm"><i>Permission:</i> MICROPHONE</p>
+                    <p class="ori"><i>Reference:</i> use microphone to measure noise</p>
+                    <p class="check"><input type="checkbox" name="check_3_0"/>A: sound level detection by microphone</p>
+                    <p class="check"><input type="checkbox" name="check_3_1"/>B: start listening the app uses microphone</p>
+                    <p class="check"><input type="checkbox" name="check_3_2"/>C: you can record to the microphone and make a voice to the microphone</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">5/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_5" hidden>
+                    <p class="perm"><i>Permission:</i> CAMERA</p>
+                    <p class="ori"><i>Reference:</i> Recognition of images to access promotions</p>
+                    <p class="check"><input type="checkbox" name="check_4_0"/>A: the app use device camera</p>
+                    <p class="check"><input type="checkbox" name="check_4_1"/>B: open camera to take picture or video</p>
+                    <p class="check"><input type="checkbox" name="check_4_2"/>C: select a photo from gallery or take a photo with the camera</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">6/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_6" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> In case of emergency; the emergency call centre will get your location as well </p>
+                    <p class="check"><input type="checkbox" name="check_5_0"/>A: access location and location gps</p>
+                    <p class="check"><input type="checkbox" name="check_5_1"/>B: the app use your gps</p>
+                    <p class="check"><input type="checkbox" name="check_5_2"/>C: this app access your location information for emergency service</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">7/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_7" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> Map and GPS tracking supported</p>
+                    <p class="check"><input type="checkbox" name="check_6_0"/>A: the app uses your current gps location</p>
+                    <p class="check"><input type="checkbox" name="check_6_1"/>B: track your location based on real time location map</p>
+                    <p class="check"><input type="checkbox" name="check_6_2"/>C: the app uses your current gps location</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">8/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_8" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Save your photos to the gallery; or share them!</p>
+                    <p class="check"><input type="checkbox" name="check_7_0"/>A: save photos to your device</p>
+                    <p class="check"><input type="checkbox" name="check_7_1"/>B: save photos to your phone gallery and share it with your contacts friends</p>
+                    <p class="check"><input type="checkbox" name="check_7_2"/>C: save your photo to your phone and share it with your friends</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">9/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_9" hidden>
+                    <p class="perm"><i>Permission:</i> MICROPHONE</p>
+                    <p class="ori"><i>Reference:</i> You can record and playback your creations</p>
+                    <p class="check"><input type="checkbox" name="check_8_0"/>A: the app will uses microphone permission to record audio</p>
+                    <p class="check"><input type="checkbox" name="check_8_1"/>B: the app will use microphone permission</p>
+                    <p class="check"><input type="checkbox" name="check_8_2"/>C: the app will use microphone permission</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">10/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_10" hidden>
+                    <p class="perm"><i>Permission:</i> CONTACT</p>
+                    <p class="ori"><i>Reference:</i> This app will read your contacts.</p>
+                    <p class="check"><input type="checkbox" name="check_bombs_0"/>A: save contact</p>
+                    <p class="check"><input type="checkbox" name="check_bombs_1"/>B: read contacts</p>
+                    <p class="check"><input type="checkbox" name="check_bombs_2"/>C: read your phone storage</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">11/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+
+<div class="questions" name="div_11" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> GPS bus tracking system help  parents to see that where the bus is and  he or she is safe</p>
+                    <p class="check"><input type="checkbox" name="check_10_0"/>A: this app uses your location to gps</p>
+                    <p class="check"><input type="checkbox" name="check_10_1"/>B: track your location based on real time location map</p>
+                    <p class="check"><input type="checkbox" name="check_10_2"/>C: this app uses your location to gps</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">12/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_12" hidden>
+                    <p class="perm"><i>Permission:</i> MICROPHONE</p>
+                    <p class="ori"><i>Reference:</i> It is a smart sound recorder</p>
+                    <p class="check"><input type="checkbox" name="check_11_0"/>A: this app use microphone permission to record sound</p>
+                    <p class="check"><input type="checkbox" name="check_11_1"/>B: the app microphone permission</p>
+                    <p class="check"><input type="checkbox" name="check_11_2"/>C: the app microphone permission</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">13/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_13" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Once you have completed your animated flower frames; you can save them as live wallpapers and set them as your phone?'?s background; or save your project as an image</p>
+                    <p class="check"><input type="checkbox" name="check_12_0"/>A: save your photo to your phone and share it with your friends</p>
+                    <p class="check"><input type="checkbox" name="check_12_1"/>B: save photo to your phone gallery you can set as wallpaper and set as wallpaper background</p>
+                    <p class="check"><input type="checkbox" name="check_12_2"/>C: save pictures to your storage space</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">14/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_14" hidden>
+                    <p class="perm"><i>Permission:</i> CAMERA</p>
+                    <p class="ori"><i>Reference:</i> Scan Barcode and get best price</p>
+                    <p class="check"><input type="checkbox" name="check_13_0"/>A: take photos from gallery or take photos from camera</p>
+                    <p class="check"><input type="checkbox" name="check_13_1"/>B: the app will use camera permission</p>
+                    <p class="check"><input type="checkbox" name="check_13_2"/>C: camera access</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">15/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_15" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> get your current location and send it via sms</p>
+                    <p class="check"><input type="checkbox" name="check_14_0"/>A: the app uses location and your location gps</p>
+                    <p class="check"><input type="checkbox" name="check_14_1"/>B: you can find your current location and share it with friends</p>
+                    <p class="check"><input type="checkbox" name="check_14_2"/>C: the app uses location and your location gps</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">16/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_16" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> If you are a professional photographer; HD Panorama will allow to save the input frames captured; and stitch and possibly adjust them on your personal computer </p>
+                    <p class="check"><input type="checkbox" name="check_15_0"/>A: external storage support</p>
+                    <p class="check"><input type="checkbox" name="check_15_1"/>B: save photo to your gallery</p>
+                    <p class="check"><input type="checkbox" name="check_15_2"/>C: save photo to your phone gallery</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">17/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_17" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Allows an application to write to external storage. used in application to save Contacts on your phone as file.</p>
+                    <p class="check"><input type="checkbox" name="check_16_0"/>A: save the photos to your phone and share it with your friends</p>
+                    <p class="check"><input type="checkbox" name="check_16_1"/>B: save your photo and contact to your phone storage</p>
+                    <p class="check"><input type="checkbox" name="check_16_2"/>C: save the picture to your storage of your device</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">18/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_18" hidden>
+                    <p class="perm"><i>Permission:</i> SMS</p>
+                    <p class="ori"><i>Reference:</i> you can register on jiochat using any mobile number; and then the app will use your mobile network or wi-fi (as available) to let you message; call and watch videos </p>
+                    <p class="check"><input type="checkbox" name="check_17_0"/>A: this app use sms permission</p>
+                    <p class="check"><input type="checkbox" name="check_17_1"/>B: this app use sms permission</p>
+                    <p class="check"><input type="checkbox" name="check_17_2"/>C: you can send sms and text message</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">19/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_19" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> We have to ask for your location occasionally; so you can help in emergency situations.</p>
+                    <p class="check"><input type="checkbox" name="check_18_0"/>A: the app will use your location and gps data</p>
+                    <p class="check"><input type="checkbox" name="check_18_1"/>B: access location and gps</p>
+                    <p class="check"><input type="checkbox" name="check_18_2"/>C: the app use the gps and to the gps gps location</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">20/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_20" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> After you?'?ve downloaded and enjoyed the content; you can share it with your friends via Twitter; Facebook; or email</p>
+                    <p class="check"><input type="checkbox" name="check_19_0"/>A: you can download free files in the app</p>
+                    <p class="check"><input type="checkbox" name="check_19_1"/>B: download ringtones mp3 enjoy offline use</p>
+                    <p class="check"><input type="checkbox" name="check_19_2"/>C: save photos to your gallery or save photos to your phone</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">21/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_21" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Multiple selection of photo to move; delete & copy paste files</p>
+                    <p class="check"><input type="checkbox" name="check_20_0"/>A: save your favorite image</p>
+                    <p class="check"><input type="checkbox" name="check_20_1"/>B: save your favorite image</p>
+                    <p class="check"><input type="checkbox" name="check_20_2"/>C: save your photos to your phone gallery</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">22/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_22" hidden>
+                    <p class="perm"><i>Permission:</i> CONTACT</p>
+                    <p class="ori"><i>Reference:</i> This App uses permissions of read contacts.</p>
+                    <p class="check"><input type="checkbox" name="check_21_0"/>A: app can read contacts to read contact</p>
+                    <p class="check"><input type="checkbox" name="check_21_1"/>B: the app can use read contact to read read contacts</p>
+                    <p class="check"><input type="checkbox" name="check_21_2"/>C: the app can use read contact to read read contacts</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">23/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_23" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> modify delete usb storage contents modify delete sd card contents: saving scans on the sd card; importing images from the sd card</p>
+                    <p class="check"><input type="checkbox" name="check_22_0"/>A: the app can access your storage path</p>
+                    <p class="check"><input type="checkbox" name="check_22_1"/>B: save image to phone storage</p>
+                    <p class="check"><input type="checkbox" name="check_22_2"/>C: save the download to your phone</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">24/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_24" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> Status bar on the home screen displaying the current temperature for your current location</p>
+                    <p class="check"><input type="checkbox" name="check_23_0"/>A: access location information</p>
+                    <p class="check"><input type="checkbox" name="check_23_1"/>B: access location and location</p>
+                    <p class="check"><input type="checkbox" name="check_23_2"/>C: access location and location</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">25/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_25" hidden>
+                    <p class="perm"><i>Permission:</i> CAMERA</p>
+                    <p class="ori"><i>Reference:</i> capture photo from camera or choose from gallery.</p>
+                    <p class="check"><input type="checkbox" name="check_24_0"/>A: the application can use camera and camera</p>
+                    <p class="check"><input type="checkbox" name="check_24_1"/>B: the application can use camera and camera</p>
+                    <p class="check"><input type="checkbox" name="check_24_2"/>C: the app will use camera front camera of your device</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">26/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_26" hidden>
+                    <p class="perm"><i>Permission:</i> LOCATION</p>
+                    <p class="ori"><i>Reference:</i> The app uses your location to keep you up to date with offers; events and activities relevant to your location </p>
+                    <p class="check"><input type="checkbox" name="check_25_0"/>A: access location and location gps</p>
+                    <p class="check"><input type="checkbox" name="check_25_1"/>B: access location and location gps</p>
+                    <p class="check"><input type="checkbox" name="check_25_2"/>C: this app will read your location information you can search location and nearby service</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">27/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_27" hidden>
+                    <p class="perm"><i>Permission:</i> CAMERA</p>
+                    <p class="ori"><i>Reference:</i> take photo by device camera</p>
+                    <p class="check"><input type="checkbox" name="check_26_0"/>A: take pictures from phone gallery or take with camera</p>
+                    <p class="check"><input type="checkbox" name="check_26_1"/>B: the app uses camera permission</p>
+                    <p class="check"><input type="checkbox" name="check_26_2"/>C: the app uses camera permission</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">28/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_28" hidden>
+                    <p class="perm"><i>Permission:</i> MICROPHONE</p>
+                    <p class="ori"><i>Reference:</i> (some) external microphone support</p>
+                    <p class="check"><input type="checkbox" name="check_27_0"/>A: this app will use your microphone</p>
+                    <p class="check"><input type="checkbox" name="check_27_1"/>B: the app set set audio and microphone of you microphone</p>
+                    <p class="check"><input type="checkbox" name="check_27_2"/>C: record your microphone to your microphone</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">29/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_29" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Get these free music ringtones for Android ringing and free download awesome ringtones that will rock your body!</p>
+                    <p class="check"><input type="checkbox" name="check_28_0"/>A: you can download free ringtones in the app</p>
+                    <p class="check"><input type="checkbox" name="check_28_1"/>B: download free ringtones</p>
+                    <p class="check"><input type="checkbox" name="check_28_2"/>C: you can download free ringtones in the app</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">30/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_30" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> using your phone storage and Wi-Fi or Mobile Data;  brings you up-to-date current information</p>
+                    <p class="check"><input type="checkbox" name="check_29_0"/>A: you can download to your phone</p>
+                    <p class="check"><input type="checkbox" name="check_29_1"/>B: download free files in the app and use your phone storage</p>
+                    <p class="check"><input type="checkbox" name="check_29_2"/>C: storage access</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">31/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+<div class="questions" name="div_31" hidden>
+                    <p class="perm"><i>Permission:</i> STORAGE</p>
+                    <p class="ori"><i>Reference:</i> Take a photo of your business card - the snapADDY Business Card Scanner recognizes the image section and automatically extracts a new contact from it in the app. You can also save other attachments; notes or the photo of the back of the business card in the app for a later export.</p>
+                    <p class="check"><input type="checkbox" name="check_30_0"/>A: this app will use camera you can take photo and save photo to your phone storage</p>
+                    <p class="check"><input type="checkbox" name="check_30_1"/>B: save photo to your gallery</p>
+                    <p class="check"><input type="checkbox" name="check_30_2"/>C: save pictures to your storage space</p>
+                    <p>
+                      <div class="pre">Previous</div><div class="count">32/32</div><div class="next">Next</div>
+                    </p>
+                  </div>
+  <br>
+  <br>
+  <p id="alert" style="color:red"></p>
+  <p hidden><input type="submit" id="submitButton" value="Submit"/></p></form>
+  <p id="alert" hidden style="color:red">There are missing ratings.</p>
+  <span><button class="butt" value="Submit" onclick=check_n_submit()>Submit</button></span>
+  <script language="Javascript">turkSetAssignmentID();</script>
+ </body>
+</html>
+
