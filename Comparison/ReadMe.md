@@ -9,4 +9,7 @@ Since Zhang et al. do not open source any of their work, we can only find some e
 
 ![image](https://github.com/DescribeCTX/DescribeCTX/blob/main/Comparison/DescribeMe_Descriptions.png)
 
+## Result
+We have presented our comparison results (DescribeCTX, DescribeCTX-CTX, and Code2Vec+PP). Detailed results can be found in the corresponding files. The first column represents the permission group, the second column represents the original descriptions written by the developers (reference sentences we used to evaluate our tool), the third column represents the synthesized descriptions from DescribeCTX/DescribeCTX-CTX/Code2Vec+PP.
+
 [1] Mu Zhang, Yue Duan, Qian Feng, and Heng Yin. 2015. Towards Automatic Generation of Security-Centric Descriptions for Android Apps. In Proceedings of the ACM SIGSAC Conference on Computer and Communications Security (CCS). 518–529.
