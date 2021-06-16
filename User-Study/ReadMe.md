@@ -21,3 +21,8 @@ Synthesized Description by Baseline Approach 1: ***the app can use camera permis
 Ratings: semantic closeness (***3***), syntactical correctness (***5***), and length appropriateness (***3***).  
 Synthesized Description by Baseline Approach 2: ***the app can use camera permission***  
 Ratings: semantic closeness (***3***), syntactical correctness (***5***), and length appropriateness (***4***).
+
+# User Study via MTurk
+We resort to Amazon Mechanical Turk (MTurk) for an open survey. We divide 1,556 data samples into 50 splits (each containing 31 or 32 samples), and send out 300 splits (i.e., 6 for each split). Each sample consists of a reference sentence as the question and three synthesized sentences from the three approaches as the answers. Users are asked to pick one or more answers that most resemble the question in terms of semantic closeness. The order of the three answers is randomly shuffled. Each sample is displayed for at least 10 seconds before it can be moved to the next sample. For each data split, we also intentionally plug in an additional data sample with one obvious answer and two irrelevant answers. If the user chose the irrelevant answers, we consider all his/her ratings invalid and remove them all. There are 275 unique users participating in our study, and 174 out of them are considered valid. Example survey quesiton can be found in `example.html`.
+## Result
+A full, detailed result is presented in `User_Study_2.csv`. In particular, we calculate the pick ratio of each anwser. On average, descriptions synthesized by DescribeCTX have higher pick ratio (nearly 20%, 57.06% versus 47.56%). 
