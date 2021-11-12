@@ -3,7 +3,7 @@ This user study is to evaluate the performance of DescribeCTX against the baseli
 In addition, we design another user study to compare the performance of DescribeCTX to the baseline approach, which does not include app context such as GUI contextual text and PACG. We use the same metrics to evaluate both approaches.  
 We recruited 8 graduate students and 4 undergraduate students with mobile app development experiences for the study. Formally, each student is required to read the consent form, and provide necessary information such as the number of years of mobile app development experience. Next, we sent the survey form to each participated student. Each survey form contains 4668 result records (DescribeCTX + 2 Baseline approaches, 1556 records for each). To mitigate the bias, each student was given half of the records from both approaches randomly, and the apporaches are invisible to the students. In other words, survey participants do not know the descriptions are synthesized by which method. Therefore, there are 6 `.csv` files of rated descriptions. The ratings for each aspect (***Semantic/Syntax/Length***) ranges from **1** to **5**: Very Bad (1), Bad (2), So-so (3), Good (4), and Very Good (5). 
 # Student Participants
-We organize 12 students here in terms of their expertise (years of software programming/Android smartphone uses/Android programming)
+We organize 12 students detailed information here in terms of their expertise. (number of years of software programming/Android smartphone uses/Android programming)
 |software programming|use experience of Android smartphone|Android programming|
 |:---:|:---:|:---:|
 |3|7|0|
