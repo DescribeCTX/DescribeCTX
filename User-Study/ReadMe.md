@@ -2,8 +2,9 @@
 This user study is to evaluate the performance of DescribeCTX against the baseline approach in terms of semantic closeness, syntactical correctness, and length appropriateness, on the synthesized descriptions. The goal of our user study is to measure whether users can understand the sensitive behavior description synthesized by DescribeCTX, and how well the synthesized descriptions are according to the above metrics.  
 In addition, we design another user study to compare the performance of DescribeCTX to the baseline approach, which does not include app context such as GUI contextual text and PACG. We use the same metrics to evaluate both approaches.  
 We recruited 8 graduate students and 4 undergraduate students with mobile app development experiences for the study. Formally, each student is required to read the consent form, and provide necessary information such as the number of years of mobile app development experience. Next, we sent the survey form to each participated student. Each survey form contains 4668 result records (DescribeCTX + 2 Baseline approaches, 1556 records for each). To mitigate the bias, each student was given half of the records from both approaches randomly, and the apporaches are invisible to the students. In other words, survey participants do not know the descriptions are synthesized by which method. Therefore, there are 6 `.csv` files of rated descriptions. The ratings for each aspect (***Semantic/Syntax/Length***) ranges from **1** to **5**: Very Bad (1), Bad (2), So-so (3), Good (4), and Very Good (5). 
-# Student Participants
-We organize 12 students detailed information here in terms of their expertise. (number of years of software programming/Android smartphone uses/Android programming)
+To mitigate the bias caused by small scale of the participants, we set another group from Amazon MTurk volunteers. The reason of having two different groups is that the MTurk workers have various background, so that their responses are more representative and bias-resistant. We conducted the same survey to both groups. We calculate the pick ratio from the results of the second group. Because the MTurk workers may give inappropriate ratings due to limited time for each question.
+# Participants
+We organize 12 students detailed information here in terms of their expertise. (number of years of software programming/Android smartphone uses/Android programming) The detailed information of Amazon MTurk user study can be found in the next section.
 |software programming|use experience of Android smartphone|Android programming|
 |:---:|:---:|:---:|
 |3|7|0|
@@ -18,6 +19,8 @@ We organize 12 students detailed information here in terms of their expertise. (
 |6|8|0|
 |5|2|2|
 |5|10|0|
+# User Study via MTurk
+We resort to Amazon Mechanical Turk (MTurk) for an open survey. We divide 1,556 data samples into 50 splits (each containing 31 or 32 samples), and send out 300 splits (i.e., 6 for each split). Each sample consists of a reference sentence as the question and three synthesized sentences from the three approaches as the answers. Users are asked to pick one or more answers that most resemble the question in terms of semantic closeness. The order of the three answers is randomly shuffled. Each sample is displayed for at least 10 seconds before it can be moved to the next sample. For each data split, we also intentionally plug in an additional data sample with one obvious answer and two irrelevant answers. If the user chose the irrelevant answers, we consider all his/her ratings invalid and remove them all. There are 275 unique users participating in our study, and 174 out of them are considered valid. Example survey quesiton can be found in `example.html`.
 # Columns
   ***Permission***: Which permission does the reference sentence describe.  
   ***Original Description***: Reference sentences labeled by manual.  
@@ -38,8 +41,6 @@ Ratings: semantic closeness (***3***), syntactical correctness (***5***), and le
 Synthesized Description by Baseline Approach 2 (Code2Vec+PP): ***the app can use camera permission***  
 Ratings: semantic closeness (***3***), syntactical correctness (***5***), and length appropriateness (***4***).
 
-# User Study via MTurk
-We resort to Amazon Mechanical Turk (MTurk) for an open survey. We divide 1,556 data samples into 50 splits (each containing 31 or 32 samples), and send out 300 splits (i.e., 6 for each split). Each sample consists of a reference sentence as the question and three synthesized sentences from the three approaches as the answers. Users are asked to pick one or more answers that most resemble the question in terms of semantic closeness. The order of the three answers is randomly shuffled. Each sample is displayed for at least 10 seconds before it can be moved to the next sample. For each data split, we also intentionally plug in an additional data sample with one obvious answer and two irrelevant answers. If the user chose the irrelevant answers, we consider all his/her ratings invalid and remove them all. There are 275 unique users participating in our study, and 174 out of them are considered valid. Example survey quesiton can be found in `example.html`.
 ## Result
 A full, detailed result is presented in `User_Study_2.csv`. In particular, we calculate the pick ratio of each anwser. On average, descriptions synthesized by DescribeCTX have higher pick ratio than the baseline approach, indicates that DescribeCTX can synthesize more accurate, app-specific descriptions for the test apps. 
 
