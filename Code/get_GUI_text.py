@@ -2,6 +2,8 @@ import os
 import shutil
 import xml.etree.ElementTree as ET
 
+import sys
+
 
 def parse_xml(root, id_list, text_list):
 	children = root.getchildren()
@@ -9,10 +11,6 @@ def parse_xml(root, id_list, text_list):
 		return
 	else:
 		for child in children:
-			# if child.tag != 'TextView':
-			# 	parse_xml(child, id_list, text_list)
-			# if child.tag != 'ImageView':
-			# 	parse_xml(child, id_list, text_list)
 			attribs = child.attrib
 			for key in attribs.keys():
 				if '}text' in key:
@@ -27,7 +25,7 @@ def parse_xml(root, id_list, text_list):
 
 
 
-
+privacy = sys.argv[1] if len(sys.argv) > 1 else "sms"
 
 def main(dir):
 	apps = os.listdir(dir)
@@ -36,7 +34,7 @@ def main(dir):
 			continue
 		print(app)
 		# os.mkdir('./UI_Context/Contacts/' + app[:app.index('.txt')] + '/')
-		f = open('/Users/shaoyang/Desktop/API_exp/activity_layout_mapping/2/' + app, 'r')
+		f = open('./activity_layout_mapping/' + privacy + '/' + app, 'r')
 		app_activities_layouts = {}
 		app_activities = []
 		for line in f.readlines():
@@ -44,20 +42,17 @@ def main(dir):
 			app_activities_layouts[line[0]] = line[1]
 			app_activities.append(line[0])
 		f.close()
-		# relevant_activity = get_relevant_activity(app, app_activities)
-		# relevant_activity_layout = []
-		# for activity in relevant_activity:
-		# 	layout = app_activities_layouts[activity]
-		# 	relevant_activity_layout.append(layout)
+
 		if len(app_activities_layouts) == 0:
 			continue
 		else:
 			apk_context_text = []
 			for activity in app_activities_layouts.keys():
 				layout = app_activities_layouts[activity]
-				apk_res_dir = '/Users/shaoyang/Desktop/API_exp/apktool_output/2/'
+				apk_res_dir = './apktool_output/'
 				apk_name = app[:app.index('.txt')]
-				activity_xml = apk_res_dir + apk_name + '.apk/res/layout/' + layout + '.xml'
+				activity_xml = apk_res_dir + privacy + '/' + apk_name + '/res/layout/' + layout + '.xml'
+
 				try:
 					tree = ET.parse(activity_xml)
 				except Exception as e:
@@ -68,7 +63,7 @@ def main(dir):
 				for text in apkdata_text:
 					if '@string' in text:
 						string_id = text[text.index('/') + 1:]
-						f_string = open(apk_res_dir + apk_name + '.apk/res/values/strings.xml', 'r')
+						f_string = open(apk_res_dir + privacy + '/' + apk_name + '/res/values/strings.xml', 'r')
 						for line in f_string.readlines():
 							if string_id not in line:
 								continue
@@ -76,18 +71,24 @@ def main(dir):
 								string_value = str(line)[str(line).index('>') + 1:str(line).index('</')]
 								apk_context_text.append(string_value)
 							except Exception as e:
+								print("An exception occurred: ", str(e))
+								# import pdb; pdb.set_trace()
 								continue
 					else:
 						apk_context_text.append(text)
-			f_out = open('/Users/shaoyang/Downloads/7permissions/newdata/2/GUI/Contacts/' + app, 'w')
+			
+			outPath = os.path.join('./GUI', privacy)
+			if not os.path.exists(outPath):
+				os.makedirs(outPath)
+
+			f_out = open(outPath + '/' + app, 'w')
 			for text in apk_context_text:
 				f_out.write(text + ' ')
 			f_out.close()
 
+			
+
 
 if __name__ == 	"__main__":
-	app_dir = '/Users/shaoyang/Downloads/7permissions/newdata/2/Descriptions/Contacts/'
+	app_dir = os.path.join('./activity_layout_mapping/', privacy)
 	main(app_dir)
-	# tree = ET.parse(xml_file)
-	# apkdata_text = []
-	# apkdata_id = []

@@ -3,30 +3,14 @@ import shutil
 import codecs
 import binascii
 import sys
+import traceback
 
-resourcedir = '/Users/shaoyang/Desktop/API_exp/apktool_output/2/'
-mappingdir = '/Users/shaoyang/Desktop/API_exp/activity_id_mapping/2/'
-# apps = os.listdir(resourcedir)
+privacy = sys.argv[1] if len(sys.argv) > 1 else "sms"
+
+resourcedir = os.path.join('./apktool_output/', privacy)
+mappingdir = os.path.join('./activity_id_mapping/', privacy)
 mappings = os.listdir(mappingdir)
-# for app in apps:
-# 	if app == '.DS_Store':
-# 		continue
-# 	app_res = os.listdir(resourcedir + app + '/')
-# 	for res in app_res:
-# 		if res != 'res':
-# 			if os.path.isdir(resourcedir + app + '/' + res + '/'):
-# 				shutil.rmtree(resourcedir + app + '/' + res)
-# 			else:
-# 				os.remove(resourcedir + app + '/' + res)
-# 		else:
-# 			all_res = os.listdir(resourcedir + app + '/' + res + '/')
-# 			for res_folder in all_res:
-# 				if res_folder == 'layout':
-# 					continue
-# 				elif res_folder == 'values':
-# 					continue
-# 				else:
-# 					shutil.rmtree(resourcedir + app + '/' + res + '/' + res_folder)
+
 
 for app in mappings:
 	if app == '.DS_Store':
@@ -36,7 +20,8 @@ for app in mappings:
 		layout_id_mapping = {}
 		layout_activity_mapping = {}
 		print('Create mapping for ' + app)
-		app_layout_id_mapping = resourcedir + app + '.apk/res/values/public.xml'
+		app_layout_id_mapping = resourcedir + '/' + app + '/res/values/public.xml'
+
 		f = open(app_layout_id_mapping, 'r')
 		for line in f.readlines():
 			if ('public type=\"layout\"') in line:
@@ -45,7 +30,7 @@ for app in mappings:
 				layout_id_int = int(layout_id_hex, 16)
 				layout_id_mapping[str(layout_id_int)] = layout_name
 		f.close()
-		f1 = open(mappingdir + app + '.txt', 'r')
+		f1 = open(mappingdir + '/' + app + '.txt', 'r')
 		for line in f1.readlines():
 			line = line.strip('\n').split('\t')
 			if line[1] in layout_id_mapping.keys():
@@ -53,12 +38,24 @@ for app in mappings:
 				activity_name = line[0]
 				layout_activity_mapping[activity_name] = layout_name
 		f1.close()
-		f2 = open('./activity_layout_mapping/2/' + app + '.txt', 'w')
+
+		outPath = os.path.join('./activity_layout_mapping', privacy)
+		if not os.path.exists(outPath):
+			os.makedirs(outPath)
+
+		f2 = open('./activity_layout_mapping/' + privacy + '/' + app + '.txt', 'w')
 		for key in layout_activity_mapping.keys():
 			f2.write(key + '\t' + layout_activity_mapping[key] + '\n')
 		f2.close()
 	except Exception as e:
-		f2 = open('./activity_layout_mapping/2/' + app + '.txt', 'w')
+		print("An exception occurred: ", str(e))
+		# print(traceback.format_exc())
+		outPath = os.path.join('./activity_layout_mapping', privacy)
+		if not os.path.exists(outPath):
+			os.makedirs(outPath)
+
+		f2 = open('./activity_layout_mapping/' + privacy + '/' + app + '.txt', 'w')
 		f2.write('')
+		f2.close()
 		continue
 

@@ -1,5 +1,21 @@
 import os
 import networkx as nx
+import sys
+
+import pdb
+
+privacy = sys.argv[1] if len(sys.argv) > 1 else "sms"
+
+# Sensitive API calls, refer to https://developer.android.com/reference/packages
+sensitiveAPICall = {'calendar': ['startViewCalendarEventInManagedProfile()'],
+					'camera': ['startPreview()', 'setFlashMode()', 'startRecording()', 'startCapture()'],
+					'contact': ['getContact()','openContact()'],
+					'location': ['getCurrentLocation()', 'getLastKnownLocation()', 'getLatitude()', 'getLongitude()', 'getProvider()', 'getAccuracy()', 'getAltitude()', 'getBearing()', 'getSpeed()'],
+					'microphone': ['startRecording()', 'stop()'],
+					'sms': ['getMessageBody()', 'receiveSmsMessage()'],
+					'storage': ['getExternalStorageDirectory()', 'getDownloadCacheDirectory()', 'getRootDirectory()', 'getExternalStorageState()']}
+
+sensitive_apis = sensitiveAPICall[privacy]
 
 def create_subgraph(G, node): 
 	edges = nx.dfs_predecessors(G, node) 
@@ -10,8 +26,8 @@ def create_subgraph(G, node):
 	print(nodes)
 	return G.subgraph(nodes) 
 # your app and call graph (.dot files) folder
-apps = os.listdir('./Descriptions/Contacts/')
-dot_dir = './APKCallGraph/dot_output/'
+apps = os.listdir(os.path.join('./activity_id_mapping', privacy))
+dot_dir = os.path.join('./dot_output', privacy)
 dot_files = os.listdir(dot_dir)
 for app in apps:
 	if (app == '.DS_Store'):
@@ -20,13 +36,16 @@ for app in apps:
 		print('exists')
 		continue
 	else:
+		outPath = os.path.join('./cg', privacy)
+		if not os.path.exists(outPath):
+			os.makedirs(outPath)
 		try:
 			print(app)
 			m2id = {}
 			id2m = {}
-			temp = open(dot_dir + app[:app.index('.txt')] + '/' + app[:app.index('.txt')] + '.dot', 'r')
+			temp = open(dot_dir + '/' + app[:app.index('.txt')] + '/' + app[:app.index('.txt')] + '.dot', 'r')
 			targets = []
-			for line in temp.readlines():
+			for line in temp:
 				if 'label' not in line:
 					continue
 				line = line.strip('\n')
@@ -34,14 +53,20 @@ for app in apps:
 				m_name = line[line.index('"') + 1:line.rindex('"')]
 				m2id[m_name] = m_id
 				id2m[m_id] = m_name
-				if 'enter sensitive API here' in m_name:
+
+			sensitive_apis_set = set(sensitive_apis)  
+			targets = []
+			for m_name in m2id:
+				if any(api in m_name for api in sensitive_apis_set):
 					targets.append(m_name)
-			temp.close()
-			G = nx.drawing.nx_pydot.read_dot(dot_dir + app[:app.index('.txt')] + '/' + app[:app.index('.txt')] + '.dot')
+			# breakpoint()
+
+			
+			G = nx.drawing.nx_pydot.read_dot(dot_dir + '/' + app[:app.index('.txt')] + '/' + app[:app.index('.txt')] + '.dot')
 			# G = nx.Graph(read_dot(dot_dir + df))
 			nodelist = list(G.nodes.data())
 			#output file
-			f2 = open('./cg/Contacts/' + app, 'w')
+			f2 = open('./cg/' + privacy + '/' + app, 'a')
 			for m in targets:
 				paths = nx.single_target_shortest_path(G, str(m2id[m]))
 				path = {}
@@ -56,5 +81,6 @@ for app in apps:
 			# f.close()
 			f2.close()
 		except Exception as e:
-			f = open('./cg/Contacts/' + app, 'w')
+			f = open('./cg/' + privacy + '/' + app, 'a')
+			print(e)
 			continue
