@@ -2,11 +2,11 @@
 
 ## Step 1: Run ICC Analysis
 
-Navigate to the `ic3` folder. Inside `runic3.sh`, update the Android SDK path and version to match your setup. If you have MySQL installed, modify the user and password settings in `runic3.sh`. Before executing `runic3.sh` for the first time, create an output directory using the `mkdir output` command.
+Navigate to the `ic3` folder. Inside `runic3.sh`, update the Android SDK path and version to match your setup. If you have MySQL installed, modify the user and password settings in `runic3.sh`. Before executing `runic3.sh` for the first time, create an output directory `mkdir output`.
 
 ### Detailed Steps:
 1. Change `forceAndroidJar=../android-22/android.jar` to point to your specific Android SDK version.
-2. If you haven't already, install MySQL. Next, navigate to the `cc.properties` file and update the user and password fields.
+2. Setup MySQL (optional). Install MySQL. Then, navigate to the `cc.properties` file and update the user and password fields.
 3. Execute `ic3.sh` with the following command: `sh runic3.sh <APK_Directory>`
 
 If some of your `.apk` files failed to generate outputs, check the log. If your environment is setup correctly, the primary issue may be caused by the Android SDK version that you claim in `runic3.sh`. Double-check it.
@@ -24,7 +24,7 @@ Navigate to `APKCallGraph.java` and update the following paths:
 Next, compile the project into a `.jar` file. Copy `SourcesAndSinks.txt` and `AndroidCallbacks.txt` to the same directory as `runapkcallgraph.sh`. Then, execute the script using:
 `  sh runapkcallgraph.sh`
 
-This step will produce call graphs in `.dot` format and activity_id_mapping in `.txt` format.
+This step will produce call graphs in `.dot` format and `activity_id_mapping` in `.txt` format.
 
 Finally, execute the following command to extract PACGs from the app call graphs:
 `  python3 getPACG.py`
@@ -33,6 +33,17 @@ Before running `getPACG.py`, make the following adjustments:
 - Update the app names input path at `apps = os.listdir('./Descriptions/Contacts/')`.
 - Modify the `.dot` graph path (generated in the previous step) – by default, it's set to `dot_dir = './APKCallGraph/dot_output/'`.
 - Specify the `sensitive api call` at Line37: `enter sensitive API here` Refer to the [Android Developer website](https://developer.android.com/reference/android/location/LocationManager#public-methods) for details.
+- Here are some examples for your reference,
+  ```python
+  sensitiveAPICall = {
+      'calendar': ['startViewCalendarEventInManagedProfile()'],
+      'camera': ['startPreview()', 'setFlashMode()', 'startRecording()', 'startCapture()'],
+      'contact': ['getContact()', 'openContact()'],
+      'location': ['getCurrentLocation()', 'getLastKnownLocation()', 'getLatitude()', 'getLongitude()', 'getProvider()', 'getAccuracy()', 'getAltitude()', 'getBearing()', 'getSpeed()'],
+      'microphone': ['startRecording()', 'stop()'],
+      'sms': ['getMessageBody()', 'receiveSmsMessage()'],
+      'storage': ['getExternalStorageDirectory()', 'getDownloadCacheDirectory()', 'getRootDirectory()', 'getExternalStorageState()']
+  }
 - Specify your desired output path.
 
 **Note**: Ensure that the app names in your specified input path match the names of the .dot files in the graph path.
@@ -67,4 +78,4 @@ Use the following command to extract permission descriptions from apps' privacy 
 `  python3 extract_pp.py`
 
 **Note**:
-As Soot doesn’t support newer SDK versions at this point. We recommend you to use the SDK version between 18 to 22. At the same time, pay attention to the SDK version corresponding to the APKs.
+As Soot doesn’t support newer SDK versions at this point. We recommend you use the SDK version between 18 to 22. At the same time, pay attention to the SDK version supported by the APKs.
